@@ -1,1 +1,476 @@
-.
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fossils of Trajectories — Manifold → Agent → Dynamics → Trace → Field | Ukubona Roundtable Archive</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['\\(', '\\)']],
+    displayMath: [['\\[', '\\]']]
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+
+<style>
+  :root{
+    --bg: #0b0b0d;
+    --bg-alt: #131316;
+    --panel: #17171b;
+    --panel-border: #2a2a30;
+    --text: #e9e7e2;
+    --text-dim: #a5a3a0;
+    --text-dimmer: #726f6c;
+    --amber: #d99a4e;
+    --amber-soft: rgba(217,154,78,0.12);
+    --violet: #9a8cd9;
+    --violet-soft: rgba(154,140,217,0.12);
+    --serif: 'DM Serif Display', Georgia, serif;
+    --sans: 'DM Sans', -apple-system, sans-serif;
+    --mono: 'DM Mono', 'Courier New', monospace;
+    --rule: rgba(233,231,226,0.08);
+  }
+
+  [data-theme="light"]{
+    --bg: #faf8f4;
+    --bg-alt: #f1efe9;
+    --panel: #ffffff;
+    --panel-border: #e2ddd2;
+    --text: #201f1c;
+    --text-dim: #5c5952;
+    --text-dimmer: #8a8680;
+    --amber: #b5762a;
+    --amber-soft: rgba(181,118,42,0.08);
+    --violet: #6b5bc4;
+    --violet-soft: rgba(107,91,196,0.08);
+    --rule: rgba(32,31,28,0.08);
+  }
+
+  *{ box-sizing: border-box; }
+
+  html{ scroll-behavior: smooth; }
+
+  body{
+    margin:0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    line-height: 1.65;
+    font-size: 16.5px;
+    transition: background 0.3s ease, color 0.3s ease;
+  }
+
+  ::selection{ background: var(--amber-soft); color: var(--text); }
+
+  a{ color: var(--amber); text-decoration: none; }
+  a:hover{ text-decoration: underline; }
+
+  .wrap{ max-width: 860px; margin: 0 auto; padding: 0 28px; }
+
+  /* ---------- NAV ---------- */
+  nav{
+    position: sticky; top:0; z-index: 50;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--rule);
+  }
+  .nav-inner{
+    max-width: 860px; margin: 0 auto; padding: 12px 28px;
+    display:flex; align-items:center; justify-content:space-between; gap: 16px;
+  }
+  .brand{ display:flex; align-items:center; gap:10px; font-family: var(--mono); font-size: 13px; letter-spacing: 0.06em; color: var(--text-dim); }
+  .logo{
+    width: 18px; height: 18px; flex-shrink:0;
+    animation: spin 22s linear infinite;
+  }
+  @keyframes spin{ to{ transform: rotate(360deg); } }
+  .logo svg{ width:100%; height:100%; display:block; }
+
+  .navlinks{ display:flex; gap: 2px; overflow-x:auto; scrollbar-width:none; }
+  .navlinks::-webkit-scrollbar{ display:none; }
+  .navlinks a{
+    font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.03em;
+    color: var(--text-dimmer); padding: 6px 10px; border-radius: 4px;
+    white-space: nowrap; text-decoration:none; border: 1px solid transparent;
+  }
+  .navlinks a:hover{ color: var(--text-dim); }
+  .navlinks a.active{ color: var(--amber); border-color: var(--panel-border); background: var(--amber-soft); }
+
+  .theme-toggle{
+    font-family: var(--mono); font-size: 11px; color: var(--text-dim);
+    background: var(--panel); border: 1px solid var(--panel-border);
+    border-radius: 4px; padding: 6px 10px; cursor: pointer; flex-shrink:0;
+  }
+  .theme-toggle:hover{ border-color: var(--amber); color: var(--amber); }
+
+  /* ---------- HERO ---------- */
+  header.hero{ padding: 76px 0 44px; border-bottom: 1px solid var(--rule); }
+  .kicker{
+    font-family: var(--mono); font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--violet); margin-bottom: 18px; display:flex; align-items:center; gap:10px;
+  }
+  .kicker::before{ content:''; width: 22px; height:1px; background: var(--violet); display:inline-block; }
+  h1{
+    font-family: var(--serif); font-weight: 400; font-size: 44px; line-height: 1.15;
+    margin: 0 0 20px; color: var(--text);
+  }
+  h1 em{ font-style: italic; color: var(--amber); }
+  .subtitle{ font-size: 18px; color: var(--text-dim); max-width: 640px; margin-bottom: 28px; }
+  .meta-row{ display:flex; gap: 18px; flex-wrap:wrap; font-family: var(--mono); font-size: 12px; color: var(--text-dimmer); }
+  .meta-row span{ display:flex; align-items:center; gap:6px; }
+  .dot{ width:5px; height:5px; border-radius:50%; background: var(--amber); display:inline-block; }
+
+  /* ---------- AXIOM BAND ---------- */
+  .axiom-band{
+    margin: 40px 0 0; padding: 22px 26px; background: var(--violet-soft);
+    border-left: 3px solid var(--violet); border-radius: 2px;
+    font-family: var(--serif); font-style: italic; font-size: 20px; color: var(--text);
+  }
+  .axiom-band .translit{ display:block; font-family: var(--mono); font-style: normal; font-size: 12px; color: var(--text-dimmer); margin-top: 8px; letter-spacing: 0.03em; }
+
+  /* ---------- SECTIONS ---------- */
+  main{ padding: 8px 0 60px; }
+  section{ padding: 56px 0; border-bottom: 1px solid var(--rule); scroll-margin-top: 80px; }
+  section:last-of-type{ border-bottom: none; }
+
+  .section-label{
+    font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--text-dimmer); margin-bottom: 10px;
+  }
+  h2{
+    font-family: var(--serif); font-weight: 400; font-size: 30px; margin: 0 0 22px; color: var(--text);
+  }
+  h3{
+    font-family: var(--sans); font-weight: 600; font-size: 17px; margin: 32px 0 14px; color: var(--amber);
+  }
+  p{ margin: 0 0 18px; color: var(--text); }
+  p.dim{ color: var(--text-dim); }
+
+  .lede{ font-size: 18px; color: var(--text-dim); margin-bottom: 26px; }
+
+  blockquote{
+    margin: 26px 0; padding: 16px 22px; border-left: 2px solid var(--amber);
+    background: var(--amber-soft); font-style: italic; color: var(--text-dim); font-size: 15px;
+  }
+  blockquote cite{ display:block; margin-top:8px; font-style: normal; font-family: var(--mono); font-size: 11.5px; color: var(--text-dimmer); }
+
+  .eq{
+    margin: 22px 0; padding: 18px 22px; background: var(--panel); border: 1px solid var(--panel-border);
+    border-radius: 6px; overflow-x: auto; text-align: center;
+  }
+  .eq-flow{
+    margin: 26px 0; padding: 20px; background: var(--panel); border: 1px solid var(--panel-border);
+    border-radius: 6px; text-align:center; font-family: var(--mono); font-size: 15px; color: var(--amber);
+    letter-spacing: 0.02em; overflow-x: auto;
+  }
+
+  /* ---------- PENTAD STRIP ---------- */
+  .pentad{
+    display:flex; flex-wrap: wrap; gap: 8px; margin: 30px 0 8px; align-items: stretch;
+  }
+  .pentad .node{
+    flex: 1 1 140px; padding: 16px 14px; background: var(--panel); border: 1px solid var(--panel-border);
+    border-radius: 8px; text-align:center; position: relative;
+  }
+  .pentad .node .n{ font-family: var(--mono); font-size: 10px; color: var(--text-dimmer); letter-spacing: 0.08em; }
+  .pentad .node .t{ font-family: var(--serif); font-size: 19px; color: var(--text); margin-top: 6px; }
+  .pentad .node.was{ opacity: 0.45; }
+  .arrow{ display:flex; align-items:center; color: var(--text-dimmer); font-size: 18px; flex: 0 0 auto; }
+
+  /* ---------- TABLE ---------- */
+  table{ width:100%; border-collapse: collapse; margin: 24px 0; font-size: 14.5px; }
+  th, td{ text-align:left; padding: 11px 14px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  th{ font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-dimmer); font-weight: 500; }
+  td.k{ color: var(--amber); font-weight: 500; white-space: nowrap; }
+  tr:hover td{ background: var(--bg-alt); }
+
+  /* ---------- TENSION BLOCK ---------- */
+  .tension{
+    margin: 34px 0; border: 1px dashed var(--panel-border); border-radius: 8px; padding: 26px 28px;
+    background: repeating-linear-gradient(135deg, transparent, transparent 12px, var(--amber-soft) 12px, var(--amber-soft) 13px);
+  }
+  .tension-head{
+    display:flex; align-items:center; gap: 10px; margin-bottom: 14px;
+    font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--amber);
+  }
+  .tension-head::before{ content:'⚠'; font-size: 13px; }
+  .fork{ display:grid; grid-template-columns: 1fr 1fr; gap: 18px; margin: 18px 0; }
+  @media (max-width: 640px){ .fork{ grid-template-columns: 1fr; } }
+  .fork .side{ padding: 16px 18px; border-radius: 6px; background: var(--panel); border: 1px solid var(--panel-border); }
+  .fork .side .label{ font-family: var(--mono); font-size: 11px; color: var(--violet); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
+  .fork .side p{ font-size: 14.5px; color: var(--text-dim); margin-bottom: 0; }
+
+  /* ---------- SEED FIGURES / DIALOGUE ---------- */
+  .voice{ margin: 26px 0; }
+  .voice .who{ font-family: var(--mono); font-size: 11.5px; color: var(--violet); letter-spacing: 0.05em; margin-bottom: 6px; text-transform: uppercase; }
+  .voice p{ font-size: 15.5px; color: var(--text-dim); }
+
+  /* ---------- FOOTER ---------- */
+  footer{ padding: 48px 0 70px; text-align:center; }
+  footer p{ font-family: var(--mono); font-size: 11.5px; color: var(--text-dimmer); }
+  .unresolved-mark{
+    display:inline-block; margin: 30px auto 0; padding: 10px 18px; border: 1px solid var(--panel-border);
+    border-radius: 20px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; color: var(--text-dimmer);
+  }
+
+  /* mobile */
+  @media (max-width: 640px){
+    h1{ font-size: 32px; }
+    h2{ font-size: 24px; }
+    .wrap{ padding: 0 18px; }
+    .nav-inner{ padding: 10px 18px; }
+  }
+
+  mjx-container{ color: var(--text) !important; }
+</style>
+</head>
+<body data-theme="dark">
+
+<nav>
+  <div class="nav-inner">
+    <div class="brand">
+      <span class="logo">
+        <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="20" cy="20" r="17" stroke="var(--amber)" stroke-width="1.4" opacity="0.7"/>
+          <path d="M20 3 L20 37 M3 20 L37 20" stroke="var(--violet)" stroke-width="1" opacity="0.5"/>
+          <circle cx="20" cy="20" r="4" fill="var(--amber)"/>
+          <circle cx="31" cy="14" r="2" fill="var(--violet)"/>
+        </svg>
+      </span>
+      UKUBONA · ARCHIVE
+    </div>
+    <div class="navlinks" id="navlinks">
+      <a href="#opening">Opening</a>
+      <a href="#reorder">Reorder</a>
+      <a href="#boltzmann">Boltzmann</a>
+      <a href="#epi">Epidemiology</a>
+      <a href="#trace">Trace</a>
+      <a href="#tension">Tension</a>
+      <a href="#clinical">Consent</a>
+      <a href="#unresolved">Unresolved</a>
+    </div>
+    <button class="theme-toggle" id="themeToggle">LIGHT</button>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="kicker">Roundtable Archive · Trajectory Ontology Series</div>
+    <h1>Fossils of <em>Trajectories</em></h1>
+    <p class="subtitle">On the reordering of Manifold → Agent → Dynamics → Trace → Field, and why the bridge between Newton and Boltzmann is not mechanics but memory.</p>
+    <div class="meta-row">
+      <span><span class="dot"></span>Ukubona LLC — Pentadic Series</span>
+      <span><span class="dot"></span>Trajectory / Digital Twin Ontology</span>
+      <span><span class="dot"></span>Held Open — Not a Resolution</span>
+    </div>
+    <div class="axiom-band">
+      Okubala si Kulaba.
+      <span class="translit">counting is not seeing — the epistemological motto of the Ukubona framework</span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section id="opening">
+    <div class="section-label">I — Opening</div>
+    <h2>Ontology → epistemology</h2>
+    <p class="lede">Newton and Einstein are usually staged as a contest between two pictures of the world — one deterministic, one statistical. That framing is convenient and wrong. The more honest fault line runs between reality and what remains of it once memory is gone.</p>
+    <p>Diffusion is not the opposite of a trajectory. It is a trajectory <em>after the observer has lost access to the memory-bearing variables.</em> A molecule does not stop having a path when it diffuses — the path becomes inaccessible because the environment has absorbed the information that would have let you reconstruct it.</p>
+    <div class="eq-flow">trajectory → interaction history → decorrelation → distribution</div>
+    <p>Or, in the vocabulary this archive has been building toward:</p>
+    <div class="eq-flow">Agent → Dynamics → Trace → Field</div>
+    <blockquote>
+      The "data" are not the agents. They're not even the observations. They are the fossils of trajectories.
+    </blockquote>
+    <p class="dim">This is the sentence the whole archive hangs from. Everything below is an attempt to take it seriously rather than to resolve it into something tidier.</p>
+  </section>
+
+  <section id="reorder">
+    <div class="section-label">II — The Reordering</div>
+    <h2>Manifold, before Agent</h2>
+    <p>The earlier form of the pentad began with the thing that acts:</p>
+    <div class="pentad">
+      <div class="node was"><div class="n">01 · was</div><div class="t">Agent</div></div>
+      <div class="arrow">→</div>
+      <div class="node was"><div class="n">02 · was</div><div class="t">Manifold</div></div>
+      <div class="arrow">→</div>
+      <div class="node was"><div class="n">03</div><div class="t">Dynamics</div></div>
+      <div class="arrow">→</div>
+      <div class="node was"><div class="n">04</div><div class="t">Trace</div></div>
+      <div class="arrow">→</div>
+      <div class="node was"><div class="n">05 · was</div><div class="t">Objective</div></div>
+    </div>
+    <p>That is an AI / digital-twin ordering: start with agency, then give it somewhere to go. The physically more honest order reverses the first move:</p>
+    <div class="pentad">
+      <div class="node"><div class="n">01</div><div class="t">Manifold</div></div>
+      <div class="arrow">→</div>
+      <div class="node"><div class="n">02</div><div class="t">Agent</div></div>
+      <div class="arrow">→</div>
+      <div class="node"><div class="n">03</div><div class="t">Dynamics</div></div>
+      <div class="arrow">→</div>
+      <div class="node"><div class="n">04</div><div class="t">Trace</div></div>
+      <div class="arrow">→</div>
+      <div class="node"><div class="n">05</div><div class="t">Field</div></div>
+    </div>
+    <p>A manifold without an agent is unrealized possibility. An agent without a manifold is undefined — there is nothing for "agency" to mean until there is a space of states to move through. Possibility has to precede occupancy.</p>
+    <h3>What each stage changes</h3>
+    <p><strong>Manifold</strong> — the possibility space, before anything moves: phase space in physics, physiological state space in medicine, the board in chess, the loss landscape in ML, institutional state space in a society. It defines what movements are even possible.</p>
+    <p><strong>Agent</strong> — the walker. \( x(t) \in M \). A point that occupies the manifold: patient, molecule, user, organization, nation. Agency, not yet behavior.</p>
+    <p><strong>Dynamics</strong> — the rule of motion. Newton enters here:</p>
+    <div class="eq">\[ \frac{dx}{dt} = F(x,t) \quad\text{or, more generally,}\quad dx = F(x,t)\,dt + \sigma\, dW_t \]</div>
+    <p>Ballistic motion retains memory: \( \langle \Delta x^2 \rangle \sim t^2 \). Diffusive motion loses it: \( \langle \Delta x^2 \rangle \sim t \).</p>
+    <p><strong>Trace</strong> — the fossil record. The true trajectory \( \gamma(t) \) is usually hidden; what survives is a finite set \( \{x(t_1), \dots, x(t_n)\} \). Data are not reality. Data are the shadow cast by motion through the manifold.</p>
+    <p><strong>Field</strong> — the population-level residue, \( \rho(x,t) \), that emerges once individual trajectories become too numerous or too noisy to follow one at a time: a density, an epidemic curve, a market price, an embedding space. The field is what remains when individual memory disappears.</p>
+    <p class="dim">A failure-mode reading, plainly stated: no manifold means there is nowhere to move — a much stronger and more common clinical failure than "no agent," because a patient is rarely missing. What's missing is usually a dimension of the state space itself: no instrument capturing psychosocial state, no instrument capturing subclinical fibrosis. The absence is in the space, not the walker.</p>
+  </section>
+
+  <section id="boltzmann">
+    <div class="section-label">III — The Bridge</div>
+    <h2>Boltzmann's move</h2>
+    <p>Newton offers the complete microstate: \( x(t), v(t) \). The real world almost never hands you that. Instead you get \( P(x,t) \) — a probability distribution. Statistical physics is, in its entirety, the decision to replace inaccessible trajectories with statistical fossils.</p>
+    <div class="eq-flow">Trajectory mechanics → statistical fields</div>
+    <p>The field is not fundamental ignorance. It is <em>compressed history</em> — which is why the fossil metaphor is the bridge rather than a decoration: the trace is the intermediate layer between the individual, Newtonian world and the collective, statistical one.</p>
+    <blockquote>
+      Newton asks: "Where will the particle go?"<br>
+      Statistical physics asks: "What can we know after the particle's memory has been erased?"<br>
+      Ukubona asks: "Can we reconstruct the forgotten trajectory from its fossils?"
+    </blockquote>
+  </section>
+
+  <section id="digitaltwin">
+    <div class="section-label">IV — Application</div>
+    <h2>The digital twin is a reconstructed geodesic</h2>
+    <p>The digital twin problem is not primarily prediction. It is trajectory reconstruction under partial observability. A patient record is not a patient. A creatinine value is not kidney function. A hospitalization is not disease. They are detector hits — fossils for paleontologists, photons for astronomers, tracks in a particle detector for physicists.</p>
+    <p>The latent object is the hidden path through state space, \( \gamma(t) \). The observation is</p>
+    <div class="eq">\[ O_i = \gamma(t_i) + \epsilon_i \]</div>
+    <p>and the digital twin is the inferred geodesic, conditioned on everything that survived:</p>
+    <div class="eq">\[ \hat{\gamma}(t \mid O_1, O_2, \dots, O_n) \]</div>
+    <p>This also reorders the standard "conditions for AI" stack. Search space, data, and objective — the usual starting point — are already downstream of something prior:</p>
+    <div class="eq-flow">Agent → Manifold → Dynamics → Trace → Objective</div>
+    <p class="dim">No agent, no trajectory. No manifold, nowhere to move. No dynamics, no evolution. No trace, no learning. No objective, no selection. And the objective itself is not merely a number to maximize — it is a choice of which trajectories are allowed to matter.</p>
+  </section>
+
+  <section id="epi">
+    <div class="section-label">V — Epidemiology</div>
+    <h2>Trace as study design</h2>
+    <p>The pentad translates cleanly into epidemiologic language, and the translation is not decorative — it exposes what a "missing data" cell actually is.</p>
+    <table>
+      <thead><tr><th>Physics</th><th>Epidemiology</th><th>Governing question</th></tr></thead>
+      <tbody>
+        <tr><td class="k">Manifold</td><td>Population / state space</td><td>What states are possible?</td></tr>
+        <tr><td class="k">Agent</td><td>Person, pathogen, household, institution</td><td>What moves?</td></tr>
+        <tr><td class="k">Dynamics</td><td>Exposure, treatment, behavior, biology</td><td>How does it evolve?</td></tr>
+        <tr><td class="k">Trace</td><td>Study design, sampling, measurement, records</td><td>What fragments of motion do we capture?</td></tr>
+        <tr><td class="k">Field</td><td>Population rates, risks, distributions</td><td>What emerges after aggregation?</td></tr>
+      </tbody>
+    </table>
+    <p>Trace = study design, with a nuance worth holding onto: study design is not the trajectory itself. It is the instrument that decides which fossils survive — and, further, it is a joint choice of <em>sampling operator and clock</em>. A registry samples on calendar time. A claims database samples on billing-event time. A wearable samples on physiological time — continuous, but with its own artifact-driven gaps, where a dead battery is a different missingness mechanism than a skipped visit.</p>
+    <p>The same underlying trajectory produces radically different traces depending on the instrument:</p>
+    <div class="eq-flow">kidney donor → nephrectomy → physiologic adaptation → aging → ?</div>
+    <table>
+      <tbody>
+        <tr><td class="k">Claims trace</td><td>{ billing codes }</td></tr>
+        <tr><td class="k">EHR trace</td><td>{ creatinine, BP, visits, medications }</td></tr>
+        <tr><td class="k">Wearable trace</td><td>{ activity, heart rate, sleep }</td></tr>
+      </tbody>
+    </table>
+    <p>Formally, the study design defines a sampling operator \( T \) such that \( T(\gamma) = \) observed data. Which gives the K08 missingness insight its sharper form:</p>
+    <div class="eq-flow">missing data ≠ empty cell<br>missing data = unobserved trajectory segment</div>
+    <p class="dim">And the reason a segment goes unobserved is not uniform across designs — it is itself informative. The trace doesn't only compress \( \gamma(t) \); the shape of its gaps carries a signature of why they're there.</p>
+  </section>
+
+  <section id="trace">
+    <div class="section-label">VI — From Effect to State</div>
+    <h2>What kind of question is being asked</h2>
+    <p>A traditional model asks \( P(Y \mid X) \) — what is the risk of outcome \(Y\) given exposure \(X\)? A trajectory model asks \( P(\gamma(t) \mid T) \) — given these traces, what path is the system likely following? That is a shift from effect estimation to state estimation: from "what happened on average" to "where is this particular walker in the manifold, and what trajectories remain possible from here." This is the move from population statistics toward digital twins. The field is not a replacement for the agent — it is the compressed shadow of millions of agents, and the twin tries to walk back from the shadow toward the one agent that cast it.</p>
+  </section>
+
+  <section id="tension">
+    <div class="section-label">VII — Held Open</div>
+    <h2>The Schrödinger question</h2>
+    <p>There is a second field-valued object in physics that the pentad's "Field" stage brushes against without settling into: the wavefunction \( \psi(x,t) \). The resemblance to \( \rho(x,t) \) is real, but the difference underneath it is not cosmetic — and it is the fork this archive is deliberately not closing.</p>
+    <div class="tension">
+      <div class="tension-head">Unresolved — held, not decided</div>
+      <p class="dim">Is the digital twin's field a statement about a <em>real but hidden</em> trajectory, or about a state that has no sharper fact of the matter until it is measured?</p>
+      <div class="fork">
+        <div class="side">
+          <div class="label">Boltzmann-flavored</div>
+          <p>\( P(x,t) \) as ignorance over paths. There is a real \( \gamma(t) \) — you simply can't see all of it. \( \hat{\gamma}(t \mid O) \) is a posterior over a trajectory that actually happened. Uncertainty is epistemic: reducible, in principle, with a better instrument, a denser trace, a longer follow-up.</p>
+        </div>
+        <div class="side">
+          <div class="label">Schrödinger-flavored</div>
+          <p>\( \psi(x,t) \) as the state itself being field-valued. There is no fact of the matter about "where the patient really is" independent of the measurement context. Uncertainty is aleatoric: not resolvable even with a perfect sensor, because the object being modeled is not the kind of thing that has a sharper answer.</p>
+        </div>
+      </div>
+      <p>This is not a philosophical aside. It changes what the robustness margin \( R(t) = d(x, \partial M) \) is claiming to be. If the twin is Boltzmann-flavored, \( R(t) \) is a distance to a boundary in a real, hidden physiological manifold — a quantity that better data could, someday, pin down exactly. If the twin is Schrödinger-flavored, \( R(t) \) is a distance computed <em>inside</em> a probability field that has no ground truth sharper than the field itself — a quantity that stays fuzzy even in the limit of perfect measurement.</p>
+      <p>A consent framework built on \( R(t) \) inherits whichever answer it assumes, usually without saying so. "We don't know yet" and "this is not yet the kind of thing that could be known" carry very different ethical weight when you are asking a living donor to sign a form. Ukubona's position, for now, is to name the fork rather than paper over it — because collapsing it prematurely is exactly the kind of move the framework exists to catch other systems making.</p>
+    </div>
+    <p class="dim">Okubala si Kulaba applies to Ukubona's own outputs too. Counting the fork's two branches is not the same as seeing which one the clinical reality actually is.</p>
+  </section>
+
+  <section id="clinical">
+    <div class="section-label">VIII — Why It Matters</div>
+    <h2>Surfacing, not settling</h2>
+    <p>None of the above is offered as an answer. Ukubona LLC's founding claim is that design decisions — which sampling operator, which clock, which notion of uncertainty — carry hidden values, and that most systems make those decisions silently, by default, long before anyone consents to anything. A digital twin that quietly assumes Boltzmann-flavored uncertainty is making a claim about the world — that more data would eventually resolve the ambiguity — without ever stating it as a claim. A consent form built on top of that twin inherits the assumption without inheriting the argument for it.</p>
+    <p>The work of this pentad is to make that inheritance visible. Not to choose the fork. To insist that whoever is building the twin, running the study, or drafting the consent language has to know which fork they are standing in — and say so.</p>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>UKUBONA LLC — PENTADIC GOVERNANCE SERIES — TRAJECTORY ONTOLOGY</p>
+    <div class="unresolved-mark">status: open — held deliberately</div>
+  </div>
+</footer>
+
+<script>
+  // theme persistence
+  (function(){
+    const toggle = document.getElementById('themeToggle');
+    const saved = localStorage.getItem('ukubona-theme') || 'dark';
+    document.body.setAttribute('data-theme', saved);
+    toggle.textContent = saved === 'dark' ? 'LIGHT' : 'DARK';
+    toggle.addEventListener('click', function(){
+      const current = document.body.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      document.body.setAttribute('data-theme', next);
+      localStorage.setItem('ukubona-theme', next);
+      toggle.textContent = next === 'dark' ? 'LIGHT' : 'DARK';
+    });
+  })();
+
+  // active nav link via IntersectionObserver
+  (function(){
+    const links = document.querySelectorAll('#navlinks a');
+    const sections = Array.from(links).map(l => document.querySelector(l.getAttribute('href'))).filter(Boolean);
+    const map = new Map();
+    links.forEach(l => map.set(l.getAttribute('href').slice(1), l));
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        const id = entry.target.getAttribute('id');
+        const link = map.get(id);
+        if (!link) return;
+        if (entry.isIntersecting) {
+          links.forEach(l => l.classList.remove('active'));
+          link.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-20% 0px -70% 0px', threshold: 0 });
+
+    sections.forEach(s => observer.observe(s));
+  })();
+</script>
+
+</body>
+</html>
